@@ -22,6 +22,13 @@ public class BlockchainService {
         // Check if blockchain needs to be initialized with genesis block
         if (blockRepository.count() == 0) {
             createGenesisBlock();
+        } else {
+            // If blockchain exists but is invalid, rehash it
+            if (!isBlockchainValid()) {
+                System.out.println("Blockchain is invalid, rehashing...");
+                rehashBlockchain();
+                System.out.println("Blockchain rehashed. New validity: " + isBlockchainValid());
+            }
         }
     }
     
