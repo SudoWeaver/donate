@@ -52,4 +52,10 @@ public class DonationController {
         model.addAttribute("blocks", blockchain);
         return "donations";
     }
+    
+    @GetMapping("/rehash")
+    public String rehashBlockchain() {
+        blockchainService.rehashBlockchain();
+        return "redirect:/blockchain";
+    }
 }

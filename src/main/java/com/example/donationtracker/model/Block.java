@@ -43,7 +43,17 @@ public class Block {
     public String calculateHash() {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            String dataToHash = index + donation.toString() + previousHash + timestamp.toString();
+            // Use a more consistent representation of timestamp
+            String timestampStr = timestamp.getYear() + "-" + 
+                                 timestamp.getMonthValue() + "-" + 
+                                 timestamp.getDayOfMonth() + "-" +
+                                 timestamp.getHour() + "-" + 
+                                 timestamp.getMinute() + "-" + 
+                                 timestamp.getSecond();
+            
+            // Create deterministic donation string without using toString() which includes the donation's timestamp
+            String donationStr = donation.getDonorName() + donation.getAmount().toString() + donation.getMessage();
+            String dataToHash = index + donationStr + previousHash + timestampStr;
             byte[] hashBytes = digest.digest(dataToHash.getBytes(StandardCharsets.UTF_8));
             
             StringBuilder hexString = new StringBuilder();
