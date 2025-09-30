@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Blockchain View - Donation Tracker</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container {
+            max-width: 900px;
+            margin-top: 30px;
+        }
+        .block-card {
+            margin-bottom: 20px;
+            border-left: 4px solid #0d6efd;
+        }
+        .hash {
+            font-family: monospace;
+            word-break: break-all;
+        }
+        .valid-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        .jumbotron {
+            padding: 2rem;
+            background-color: #e9ecef;
+            border-radius: .3rem;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Blockchain Donation Tracker</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/blockchain">View Blockchain</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/donations">Donation History</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="jumbotron">
+            <h1 class="display-4">Blockchain View</h1>
+            <p class="lead">Examine the complete blockchain of donations.</p>
+            <hr class="my-4">
+            <div class="alert" th:classappend="${isValid} ? 'alert-success' : 'alert-danger'">
+                <h4 class="alert-heading">
+                    <span th:if="${isValid}">✅ Blockchain is Valid</span>
+                    <span th:unless="${isValid}">❌ Blockchain is Invalid</span>
+                </h4>
+                <p th:if="${isValid}">The integrity of all blocks in the chain has been verified.</p>
+                <p th:unless="${isValid}">There are integrity issues with the blockchain.</p>
+            </div>
+        </div>
+        
+        <div class="accordion" id="blockchainAccordion">
+            <div class="accordion-item block-card" th:each="block, status : ${blockchain}">
+                <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" 
+                            th:data-bs-target="'#block' + ${block.index}">
+                        Block #<span th:text="${block.index}"></span> - 
+                        <span th:if="${block.index == 0}">Genesis Block</span>
+                        <span th:unless="${block.index == 0}" th:text="${block.donation.donorName + ' donated ' + block.donation.amount}"></span>
+                    </button>
+                </h2>
+                <div th:id="'block' + ${block.index}" class="accordion-collapse collapse" 
+                     data-bs-parent="#blockchainAccordion">
+                    <div class="accordion-body">
+                        <div class="card">
+                            <div class="card-header">Block Information</div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <strong>Index:</strong> <span th:text="${block.index}"></span>
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Timestamp:</strong> <span th:text="${#temporals.format(block.timestamp, 'dd-MM-yyyy HH:mm:ss')}"></span>
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Hash:</strong> <span class="hash" th:text="${block.hash}"></span>
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Previous Hash:</strong> <span class="hash" th:text="${block.previousHash}"></span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card mt-3">
+                            <div class="card-header">Donation Information</div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <strong>Donor:</strong> <span th:text="${block.donation.donorName}"></span>
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Amount:</strong> <span th:text="${block.donation.amount}"></span>
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Message:</strong> <span th:text="${block.donation.message}"></span>
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Timestamp:</strong> <span th:text="${#temporals.format(block.donation.timestamp, 'dd-MM-yyyy HH:mm:ss')}"></span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-light text-center text-lg-start mt-4">
+        <div class="text-center p-3">
+            © 2025 Blockchain Donation Tracker
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

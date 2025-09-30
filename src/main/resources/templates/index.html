@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Blockchain Donation Tracker</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container {
+            max-width: 800px;
+            margin-top: 30px;
+        }
+        .jumbotron {
+            padding: 2rem;
+            background-color: #e9ecef;
+            border-radius: .3rem;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Blockchain Donation Tracker</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/blockchain">View Blockchain</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/donations">Donation History</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="jumbotron">
+            <h1 class="display-4">Welcome to Blockchain Donation Tracker</h1>
+            <p class="lead">Make a secure donation that will be added to our blockchain.</p>
+            <hr class="my-4">
+            <p>Fill out the form below to make a donation:</p>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <form action="/donate" method="post" th:object="${donation}">
+                    <div class="mb-3">
+                        <label for="donorName" class="form-label">Donor Name</label>
+                        <input type="text" class="form-control" id="donorName" th:field="*{donorName}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="amount" class="form-label">Amount</label>
+                        <input type="number" step="0.01" class="form-control" id="amount" th:field="*{amount}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="message" class="form-label">Message (Optional)</label>
+                        <textarea class="form-control" id="message" rows="3" th:field="*{message}"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit Donation</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-light text-center text-lg-start mt-4">
+        <div class="text-center p-3">
+            © 2025 Blockchain Donation Tracker
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
