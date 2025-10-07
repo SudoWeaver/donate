@@ -43,7 +43,10 @@ public class Block {
     public String calculateHash() {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            String dataToHash = index + donation.toString() + previousHash + timestamp.toString();
+            // Create a deterministic string representation of the donation that doesn't include the ID
+            // (since the ID is assigned by the database and changes the hash)
+            String donationData = donation.getDonorName() + "|" + donation.getAmount() + "|" + donation.getMessage();
+            String dataToHash = index + donationData + previousHash + timestamp.toString();
             byte[] hashBytes = digest.digest(dataToHash.getBytes(StandardCharsets.UTF_8));
             
             StringBuilder hexString = new StringBuilder();

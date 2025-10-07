@@ -22,6 +22,13 @@ public class BlockchainService {
         // Check if blockchain needs to be initialized with genesis block
         if (blockRepository.count() == 0) {
             createGenesisBlock();
+        } else {
+            // If blockchain exists but is invalid, rehash it
+            if (!isBlockchainValid()) {
+                System.out.println("Blockchain is invalid, rehashing...");
+                rehashBlockchain();
+                System.out.println("Blockchain rehashed. New validity: " + isBlockchainValid());
+            }
         }
     }
     
@@ -73,5 +80,25 @@ public class BlockchainService {
     
     public Optional<Block> getBlockByIndex(int index) {
         return blockRepository.findByIndex(index);
+    }
+    
+    @Transactional
+    public void rehashBlockchain() {
+        List<Block> blocks = blockRepository.findAll();
+        
+        for (int i = 0; i < blocks.size(); i++) {
+            Block block = blocks.get(i);
+            
+            // Recalculate hash for current block
+            block.setHash(block.calculateHash());
+            
+            // Update next block's previousHash if it exists
+            if (i < blocks.size() - 1) {
+                Block nextBlock = blocks.get(i + 1);
+                nextBlock.setPreviousHash(block.getHash());
+            }
+            
+            blockRepository.save(block);
+        }
     }
 }
