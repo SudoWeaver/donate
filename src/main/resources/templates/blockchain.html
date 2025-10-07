@@ -59,14 +59,6 @@
             <h1 class="display-4">Blockchain View</h1>
             <p class="lead">Examine the complete blockchain of donations.</p>
             <hr class="my-4">
-            <div class="alert" th:classappend="${isValid} ? 'alert-success' : 'alert-danger'">
-                <h4 class="alert-heading">
-                    <span th:if="${isValid}">✅ Blockchain is Valid</span>
-                    <span th:unless="${isValid}">❌ Blockchain is Invalid</span>
-                </h4>
-                <p th:if="${isValid}">The integrity of all blocks in the chain has been verified.</p>
-                <p th:unless="${isValid}">There are integrity issues with the blockchain.</p>
-            </div>
         </div>
         
         <div class="accordion" id="blockchainAccordion">
